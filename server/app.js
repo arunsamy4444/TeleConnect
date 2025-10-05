@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 
 // Allow only your Vercel frontend
-const allowedOrigins = ["https://your-frontend.vercel.app"];
+const allowedOrigins = ["https://tele-connect.vercel.app/"];
 app.use(
   cors({
     origin: function (origin, callback) {
