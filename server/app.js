@@ -7,27 +7,27 @@ dotenv.config();
 
 const app = express();
 
-// Allow only your Vercel frontend
-const allowedOrigins = ["https://tele-connect.vercel.app/"];
+const allowedOrigins = ["https://tele-connect.vercel.app"];
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like Postman)
-      if (!origin) return callback(null, true);
+      if (!origin) return callback(null, true); // allow Postman, etc
       if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
-        return callback(new Error(msg), false);
+        return callback(new Error("CORS not allowed"), false);
       }
       return callback(null, true);
     },
+    methods: ["GET", "POST", "OPTIONS"], // explicitly allow OPTIONS
+    allowedHeaders: ["Content-Type", "Authorization"], // allow headers you use
   })
 );
 
-app.use(express.json());
+// This ensures preflight requests are handled
+app.options("*", cors());
 
-// Routes
+app.use(express.json());
 app.use("/api/message", messageRoutes);
 
-// Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
