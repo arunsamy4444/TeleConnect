@@ -1,21 +1,90 @@
-#include <cstdlib>
-#include <string>
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #include <iostream>
+#include <string>
+#include <cstdlib>
+#include <algorithm>  // for std::remove
 
-int main(int argc, char* argv[]) {
+#pragma comment(lib, "Ws2_32.lib")
+#define PORT 5000
+
+int main() {
+    WSADATA wsaData;
+    if (WSAStartup(MAKEWORD(2,2), &wsaData) != 0) {
+        std::cerr << "WSAStartup failed\n";
+        return 1;
+    }
+
+    SOCKET server = socket(AF_INET, SOCK_STREAM, 0);
+    if (server == INVALID_SOCKET) { std::cerr << "Socket failed\n"; return 1; }
+
+    sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_port = htons(PORT);
+
+    if (bind(server, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR) {
+        std::cerr << "Bind failed\n"; return 1;
+    }
+
+    if (listen(server, 3) == SOCKET_ERROR) { std::cerr << "Listen failed\n"; return 1; }
+
+    std::cout << "Server running on port " << PORT << "...\n";
+
     std::string BOT_TOKEN = "8437194783:AAEXkdvcsuuulhd0hjM3PNhlhTyDJQ1vlfc";
     std::string CHAT_ID = "1482060987";
 
-    std::string message = "Hello World"; 
-    if (argc > 1) message = argv[1]; // take message from Node
+    while (true) {
+        SOCKET client = accept(server, NULL, NULL);
+        if (client == INVALID_SOCKET) { std::cerr << "Accept failed\n"; continue; }
 
-    std::string cmd = "curl -s \"https://api.telegram.org/bot" + BOT_TOKEN +
-                      "/sendMessage?chat_id=" + CHAT_ID + "&text=" + message + "\"";
+        char buffer[2048] = {0};
+        int bytes = recv(client, buffer, 2048, 0);
+        std::string request(buffer, bytes);
 
-    int ret = system(cmd.c_str());
-    if (ret == 0) std::cout << "Message sent successfully!\n";
-    else std::cerr << "Failed to send message.\n";
+        // Handle CORS preflight OPTIONS request
+        if (request.find("OPTIONS") == 0) {
+            std::string preflight = 
+                "HTTP/1.1 200 OK\r\n"
+                "Access-Control-Allow-Origin: *\r\n"
+                "Access-Control-Allow-Methods: POST, OPTIONS\r\n"
+                "Access-Control-Allow-Headers: Content-Type\r\n"
+                "Content-Length: 0\r\n\r\n";
+            send(client, preflight.c_str(), preflight.size(), 0);
+            closesocket(client);
+            continue;
+        }
 
+        // crude extraction of JSON body
+        size_t bodyPos = request.find("\r\n\r\n");
+        std::string body = (bodyPos != std::string::npos) ? request.substr(bodyPos + 4) : "";
+
+        std::string msg = "Hello World";
+        size_t msgPos = body.find("\"msg\"");
+        if (msgPos != std::string::npos) {
+            size_t start = body.find(":", msgPos) + 1;
+            size_t end = body.find("\"", start + 1);
+            msg = body.substr(start, end - start);
+            msg.erase(std::remove(msg.begin(), msg.end(), '\"'), msg.end());
+        }
+
+        // send to Telegram
+        std::string cmd = "curl -s \"https://api.telegram.org/bot" + BOT_TOKEN +
+                          "/sendMessage?chat_id=" + CHAT_ID + "&text=" + msg + "\"";
+        system(cmd.c_str());
+
+        // send HTTP response with CORS header
+        std::string httpResponse = 
+            "HTTP/1.1 200 OK\r\n"
+            "Access-Control-Allow-Origin: *\r\n"
+            "Content-Length: 19\r\n\r\n"
+            "Message sent!";
+        send(client, httpResponse.c_str(), httpResponse.size(), 0);
+
+        closesocket(client);
+    }
+
+    closesocket(server);
+    WSACleanup();
     return 0;
 }
-

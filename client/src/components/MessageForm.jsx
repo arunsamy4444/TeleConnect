@@ -6,34 +6,29 @@ export default function MessageForm() {
   const [msg, setMsg] = useState("");
   const [status, setStatus] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setStatus("Sending...");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setStatus("Sending...");
 
-    try {
-// frontend/src/MessageForm.jsx
-const res = await fetch("http://localhost:5000/api/message", {
+  try {
+    const res = await fetch("http://localhost:5000/api/message", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, msg }),
     });
 
-
-
-      const data = await res.json();
-
-      if (data.success) {
-        setStatus("Message sent successfully!");
-        setName("");
-        setMsg("");
-      } else {
-        setStatus("Failed to send message.");
-      }
-    } catch (err) {
-      setStatus("Error sending message.");
-      console.error(err);
+    if (res.ok) {
+      setStatus("Message sent successfully!");
+      setName("");
+      setMsg("");
+    } else {
+      setStatus("Failed to send message.");
     }
-  };
+  } catch {
+    setStatus(""); 
+  }
+};
+
 
   const getStatusClass = () => {
     if (status === "Sending...") return "status-sending";
