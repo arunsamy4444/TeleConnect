@@ -11,11 +11,14 @@ export default function MessageForm() {
     setStatus("Sending...");
 
     try {
-      const res = await fetch("https://teleconnect-w5uq.onrender.com/api/message", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, msg }),
-      });
+// frontend/src/MessageForm.jsx
+const res = await fetch(`${process.env.REACT_APP_API_URL}/api/message`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name, msg }),
+});
+
+
 
       const data = await res.json();
 

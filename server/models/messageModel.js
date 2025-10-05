@@ -1,5 +1,4 @@
 // models/messageModel.js
-
 const createMessage = (name, msg) => {
   return {
     name: name || "Anonymous",
