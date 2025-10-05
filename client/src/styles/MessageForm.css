@@ -1,0 +1,297 @@
+/* Deep Winter Cozy Theme CSS */
+:root {
+  --midnight-black: #050505;
+  --charcoal-gray: #262223;
+  --forest-green: #113640;
+  --deep-emerald: #09443b;
+  --burgundy: #9d0d2f;
+  --deep-plum: #421131;
+  --icy-white: #eaeaea;
+  --frosty-silver: #c2cbca;
+  --crystal-blue: #5098b3;
+  --shadow-deep: rgba(0, 0, 0, 0.7);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.message-form-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--midnight-black) 0%, var(--forest-green) 50%, var(--deep-plum) 100%);
+  background-attachment: fixed;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animated subtle snow for background depth */
+.message-form-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(2px 2px at 30px 40px, var(--frosty-silver) 50%, transparent 50%),
+    radial-gradient(2px 2px at 70px 100px, var(--frosty-silver) 50%, transparent 50%),
+    radial-gradient(1px 1px at 120px 30px, var(--frosty-silver) 50%, transparent 50%),
+    radial-gradient(1px 1px at 160px 80px, var(--frosty-silver) 50%, transparent 50%);
+  background-size: 200px 200px;
+  animation: snowfall 20s linear infinite;
+  pointer-events: none;
+  opacity: 0.2;
+}
+
+@keyframes snowfall {
+  0% { transform: translateY(-100px); }
+  100% { transform: translateY(100vh); }
+}
+
+.message-form-wrapper {
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.message-form-title {
+  text-align: center;
+  color: var(--icy-white);
+  font-size: 2.5rem;
+  font-weight: 300;
+  margin-bottom: 2.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 10px var(--shadow-deep);
+  position: relative;
+}
+
+.message-form-title::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--crystal-blue), transparent);
+}
+
+.winter-form {
+  background: rgba(38, 34, 35, 0.85);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(94, 84, 85, 0.3);
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 
+    0 15px 35px var(--shadow-deep),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Cozy glowing effect */
+.winter-form::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--forest-green), var(--deep-plum), var(--crystal-blue));
+  z-index: -1;
+  border-radius: 18px;
+  opacity: 0.3;
+  filter: blur(10px);
+}
+
+.form-group {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 1.2rem 1.5rem;
+  background: rgba(10, 10, 10, 0.7);
+  border: 1px solid rgba(94, 84, 85, 0.5);
+  border-radius: 10px;
+  color: var(--icy-white);
+  font-size: 1rem;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #9ca0a1;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--crystal-blue);
+  background: rgba(15, 15, 15, 0.8);
+  box-shadow: 
+    0 0 20px rgba(80, 152, 179, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.form-textarea {
+  min-height: 140px;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+/* Floating Labels */
+.form-input:focus + .form-label,
+.form-textarea:focus + .form-label,
+.form-input:not(:placeholder-shown) + .form-label,
+.form-textarea:not(:placeholder-shown) + .form-label {
+  transform: translateY(-180%);
+  font-size: 0.8rem;
+  color: var(--crystal-blue);
+  background: rgba(38, 34, 35, 0.9);
+  padding: 0 0.5rem;
+  border-radius: 4px;
+}
+
+.form-label {
+  position: absolute;
+  left: 1.5rem;
+  top: 1.2rem;
+  color: #9ca0a1;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.winter-button {
+  width: 100%;
+  padding: 1.3rem;
+  background: linear-gradient(135deg, var(--forest-green) 0%, var(--deep-emerald) 100%);
+  border: none;
+  border-radius: 10px;
+  color: var(--icy-white);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.winter-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(17, 54, 64, 0.4);
+  background: linear-gradient(135deg, var(--deep-emerald) 0%, var(--crystal-blue) 100%);
+}
+
+.winter-button:active {
+  transform: translateY(0);
+}
+
+.winter-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.status-message {
+  text-align: center;
+  padding: 1.2rem;
+  margin-top: 1.5rem;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background: rgba(10, 10, 10, 0.7);
+  border: 1px solid transparent;
+  backdrop-filter: blur(10px);
+}
+
+.status-success {
+  color: #a7c5bd;
+  border-color: rgba(9, 68, 59, 0.5);
+  background: rgba(9, 68, 59, 0.2);
+}
+
+.status-error {
+  color: #d4a5b1;
+  border-color: rgba(157, 13, 47, 0.5);
+  background: rgba(157, 13, 47, 0.2);
+}
+
+.status-sending {
+  color: #9ccdd6;
+  border-color: rgba(80, 152, 179, 0.5);
+  background: rgba(80, 152, 179, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .message-form-container {
+    padding: 1.5rem;
+  }
+  
+  .message-form-title {
+    font-size: 2rem;
+  }
+  
+  .winter-form {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .message-form-title {
+    font-size: 1.7rem;
+  }
+  
+  .winter-form {
+    padding: 1.5rem 1rem;
+  }
+  
+  .form-input,
+  .form-textarea {
+    padding: 1rem 1.2rem;
+  }
+  
+  .form-label {
+    left: 1.2rem;
+    top: 1rem;
+  }
+}
+
+/* Animation for status messages */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.status-message {
+  animation: fadeIn 0.3s ease;
+}
