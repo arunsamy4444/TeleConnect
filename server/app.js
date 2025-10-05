@@ -8,7 +8,7 @@ const app = express();
 // Allowed origins (local + deployed frontend)
 const allowedOrigins = [
   "http://localhost:3000",              // local React
-  "https://tele-connect.vercel.app"     // live React
+  // "https://tele-connect.vercel.app"     // live React
 ];
 
 app.use(cors({

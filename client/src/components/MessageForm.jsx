@@ -12,7 +12,7 @@ export default function MessageForm() {
 
     try {
 // frontend/src/MessageForm.jsx
-    const res = await fetch("https://teleconnect-w5uq.onrender.com/api/message", {
+const res = await fetch("http://localhost:5000/api/message", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, msg }),
